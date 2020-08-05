@@ -14,9 +14,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . ./
 
-#permission issue
-USER root
-RUN chmod 777 -R /public
 
 EXPOSE 8000
 
