@@ -19,4 +19,4 @@ host_ip = socket.gethostbyname(host_name)
         
 # driver function 
 if __name__ == '__main__': 
-    app.run(debug = True , host='localhost', port=PORT )
+    app.run(debug = True , host=host_ip, port=PORT )
