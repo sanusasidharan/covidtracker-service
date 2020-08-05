@@ -1,21 +1,22 @@
+from flask import Flask, jsonify, request, send_file , send_from_directory
 import os
-try:
-  from SimpleHTTPServer import SimpleHTTPRequestHandler as Handler
-  from SocketServer import TCPServer as Server
-except ImportError:
-  from http.server import SimpleHTTPRequestHandler as Handler
-  from http.server import HTTPServer as Server
+import socket
 
-# Read port selected by the cloud for our application
+# creating a Flask app 
+app = Flask(__name__)
+
+
+@app.route("/")
+def hello():
+    return "Hello World!"
+	
+	
 PORT = int(os.getenv('PORT', 8000))
 # Change current directory to avoid exposure of control files
-os.chdir('static')
-
-httpd = Server(("", PORT), Handler)
-try:
-  print("Start serving at port %i" % PORT)
-  httpd.serve_forever()
-except KeyboardInterrupt:
-  pass
-httpd.server_close()
-
+#os.chdir('/static')
+host_name = socket.gethostname() 
+host_ip = socket.gethostbyname(host_name)
+        
+# driver function 
+if __name__ == '__main__': 
+    app.run(debug = True , host='localhost', port=PORT )
