@@ -9,14 +9,6 @@ from werkzeug.utils import secure_filename
 import json
 import uuid
 from datetime import datetime
-from scipy import fftpack
-# Heartrate analysis package
-import heartpy as hp
-from heartpy.exceptions import BadSignalWarning
-# Allows for filtering
-from scipy import signal
-from scipy.signal import butter, lfilter
-# For file saving
 import time
 import array
 from datetime import datetime
