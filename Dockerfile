@@ -13,7 +13,7 @@ RUN pip3 install --upgrade pip \
   && pip3 install --upgrade pipenv \
   && pipenv install --system --deploy
 
-USER 1001
+USER 1777
 
 COPY . /app
 
