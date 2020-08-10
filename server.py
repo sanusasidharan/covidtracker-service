@@ -116,7 +116,7 @@ def tempCalculator(inputImageToProcess):
         print(e)
 
 
-PORT = int(os.getenv('PORT', 8000))
+PORT = int(os.getenv('PORT', 3000))
 # Change current directory to avoid exposure of control files
 #os.chdir('/static')
 host_name = socket.gethostname() 

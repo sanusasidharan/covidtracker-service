@@ -17,6 +17,6 @@ USER 1001
 
 COPY . /app
 
-EXPOSE 8000
+EXPOSE 3000
 
-CMD ["python", "/manage.py"]
+CMD ["gunicorn", "-b", "0.0.0.0:3000", "--env", "DJANGO_SETTINGS_MODULE=pythondjangoapp.settings.production", "pythondjangoapp.wsgi", "--timeout 120"]
