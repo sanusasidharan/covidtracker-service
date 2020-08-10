@@ -1,18 +1,22 @@
-FROM python:3.8
+FROM registry.access.redhat.com/ubi8
 
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-    -y libxrender-dev \
-    && rm -rf /var/lib/apt/lists/*
+WORKDIR /app
 
-#WORKDIR /usr/src/app
+COPY Pipfile* /app/
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+## NOTE - rhel enforces user container permissions stronger ##
+USER root
+RUN yum -y install python3
+RUN yum -y install python3-pip wget
 
-COPY . ./
+RUN pip3 install --upgrade pip \
+  && pip3 install --upgrade pipenv \
+  && pipenv install --system --deploy
 
+USER 1001
+
+COPY . /app
 
 EXPOSE 8000
 
-CMD ["python", "/server.py"]
+CMD ["python", "/manage.py"]
