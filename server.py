@@ -17,7 +17,7 @@ import io
 # creating a Flask app
 app = Flask(__name__)
 classifier = cv2.CascadeClassifier(cv2.data.haarcascades+"haarcascade_frontalface_default.xml")
-loc = os.environ.get('DATA_PATH','D:/TestData/')
+loc = os.environ.get('DATA_PATH','D:/Project/Hackathon/IBM_Hackathon/Remote_covid_Tracker/V2/covid-tracer-bff/public/uploads/')
 cropped = loc+"/cropped/"
 
 
@@ -28,8 +28,8 @@ def hello():
 @app.route('/api/crop', methods=['POST'])
 def crop():
     content = request.json
-    fileName=cropFile(loc+content['filename'])
-
+    print('content:',content)
+    fileName=cropFile(content['filename'])
     return fileName
 
 def cropFile(image):
@@ -124,4 +124,4 @@ host_ip = socket.gethostbyname(host_name)
         
 # driver function 
 if __name__ == '__main__': 
-    app.run(debug = True , host=host_name, port=PORT )
+    app.run(debug = True , host='localhost', port=8080 )
