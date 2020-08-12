@@ -14,25 +14,36 @@ import array
 from datetime import datetime
 import csv
 import io
+import urllib.request
 # creating a Flask app
 app = Flask(__name__)
 classifier = cv2.CascadeClassifier(cv2.data.haarcascades+"haarcascade_frontalface_default.xml")
-loc = os.environ.get('DATA_PATH','D:/Project/Hackathon/IBM_Hackathon/Remote_covid_Tracker/V2/covid-tracer-bff/public/uploads/')
-cropped = loc+"/cropped/"
+#loc = os.environ.get('DATA_PATH','D:/Work/Hackathon/NODE/covid-tracer-bff/public/uploads/')
+base_dir = os.path.dirname(__file__)
+cropped = base_dir+'/public/cropped/'
+
 
 
 @app.route("/")
 def hello():
     return "Hello World!"
-
+    
+@app.route('/cropped/<path:path>')
+def send_js(path):
+    return send_from_directory(cropped, path)
+    
 @app.route('/api/crop', methods=['POST'])
 def crop():
     content = request.json
     print('content:',content)
-    fileName=cropFile(content['filename'])
-    return fileName
+    name = content['filename']
+    url = 'http://localhost:8000/images/'+name
+    urllib.request.urlretrieve(url, cropped+name)
+    json=cropFile(name)
+    return json
 
-def cropFile(image):
+def cropFile(image_input):
+    image = cropped+image_input
     print('image:',image )
     image_copy = cv2.imread(image)
     gray_image = cv2.cvtColor(image_copy, cv2.COLOR_RGB2GRAY)
@@ -46,15 +57,23 @@ def cropFile(image):
          face_crop.append(gray_image[y:y+h, x:x+w])
     #facelen = 0
        for face in face_crop:
-         croppedFileName = '{}{:-%Y%m%d%H%M%S}.jpg'.format(str(uuid.uuid4().hex), datetime.now())
-         cv2.imwrite(cropped+croppedFileName,face)
-         return croppedFileName
+            #croppedFileName = '{}{:-%Y%m%d%H%M%S}.jpg'.format(str(uuid.uuid4().hex), datetime.now())
+            croppedFileName = image_input
+            cv2.imwrite(cropped+croppedFileName,face)
+            tmp,avg = tempCalculator(cropped+croppedFileName)
+            data_set = {"temperature": tmp, "average": avg}
+            json_dump = json.dumps(data_set)
+            print(json_dump)
+            #jsonObj = jsonify(temprature=tmp,average=avg)
+            #jsonObj = jsonify({temperature=tmp,average=avg})
+            return json_dump
+        #return croppedFileName
     else:
         croppedFileName= ''
         return  croppedFileName
 
 # route http posts to this method
-@app.route('/api/temp', methods=['POST'])
+'''@app.route('/api/temp', methods=['POST'])
 def calculateTemperature():
     content = request.json
     filename=content['filename']
@@ -64,7 +83,7 @@ def calculateTemperature():
     print(json_dump)
     #jsonObj = jsonify(temprature=tmp,average=avg)
     #jsonObj = jsonify({temperature=tmp,average=avg})
-    return json_dump
+    return json_dump'''
 
 def tempCalculator(inputImageToProcess):
     try:
