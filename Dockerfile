@@ -1,22 +1,19 @@
-FROM registry.access.redhat.com/ubi8
+FROM python:3.6
 
-WORKDIR /app
+RUN apt-get update \
+    && apt-get upgrade \
+    && apt-get install -y --no-install-recommends \
+    -y libxrender-dev \
+    && rm -rf /var/lib/apt/lists/*
 
-COPY Pipfile* /app/
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-## NOTE - rhel enforces user container permissions stronger ##
+COPY . ./
+#permission issue
 USER root
-RUN yum -y install python3
-RUN yum -y install python3-pip wget
+RUN chmod 777 -R /public/
 
-RUN pip3 install --upgrade pip \
-  && pip3 install --upgrade pipenv \
-  && pipenv install --system --deploy
+EXPOSE 8000
 
-USER 1777
-
-COPY . /app
-
-EXPOSE 3000
-
-CMD ["gunicorn", "-b", "0.0.0.0:3000", "--env", "DJANGO_SETTINGS_MODULE=pythondjangoapp.settings.production", "pythondjangoapp.wsgi", "--timeout 120"]
+CMD ["python", "/server.py"]
