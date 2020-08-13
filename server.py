@@ -20,6 +20,7 @@ app = Flask(__name__)
 classifier = cv2.CascadeClassifier(cv2.data.haarcascades+"haarcascade_frontalface_default.xml")
 #loc = os.environ.get('DATA_PATH','D:/Work/Hackathon/NODE/covid-tracer-bff/public/uploads/')
 base_dir = os.path.dirname(__file__)
+node_endpoint = os.environ.get('BFF_ENDPOINT', 'http://localhost:8000/')
 cropped = base_dir+'/public/cropped/'
 
 
@@ -37,7 +38,7 @@ def crop():
     content = request.json
     print('content:',content)
     name = content['filename']
-    url = 'http://localhost:8000/images/'+name
+    url = node_endpoint+'images/'+name
     urllib.request.urlretrieve(url, cropped+name)
     json=cropFile(name)
     return json
