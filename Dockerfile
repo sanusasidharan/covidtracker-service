@@ -16,4 +16,4 @@ RUN chmod 777 -R /public/
 
 EXPOSE 8080
 
-CMD ["python", "/server.py"]
+CMD ["python", "/app.py"]
