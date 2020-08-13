@@ -14,6 +14,6 @@ COPY . ./
 USER root
 RUN chmod 777 -R /public/
 
-EXPOSE 8000
+EXPOSE 8080
 
 CMD ["python", "/server.py"]
