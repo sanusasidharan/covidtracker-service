@@ -136,12 +136,10 @@ def tempCalculator(inputImageToProcess):
         print(e)
 
 
-#PORT = int(os.getenv('PORT', 3000))
-# Change current directory to avoid exposure of control files
-#os.chdir('/static')
-#host_name = socket.gethostname() 
-#host_ip = socket.gethostbyname(host_name)
+PORT = int(os.getenv('PORT', 8080))
+host_name = socket.gethostname() 
+host_ip = socket.gethostbyname(host_name)
         
 # driver function 
 if __name__ == '__main__': 
-    app.run(debug = True , host='localhost', port=8080 )
+    app.run(debug = True , host=host_ip, port=PORT )
